@@ -1,5 +1,3 @@
----@diagnostic disable-next-line: undefined-global
-
 MOD_ID = "energizer"
 
 -- Enum из типов блоков
@@ -140,29 +138,29 @@ function Energy_blocks:new(x, y, z, id, energy, max_energy, block_type, meta)
 
     -- возвращяет количество энергии которое может вместить из данного количества
     ---@return integer energy_in количество энергии которое может вместится из данного числа
-    function Block:count_max_energy(energy)
-        local c_energy = self.energy + energy
+    function Block:count_max_energy(count)
+        local c_energy = self.energy + count
         if c_energy > self.max_energy then
             return self.max_energy - self.energy
         else
-            return energy
+            return count
         end
     end
 
     -- вызывается когда блоку нужно добавить энергию в его хранилище
-    ---@param energy integer количество энергии для получения
-    function Block:receive_energy(energy)
-        self.energy = self.energy + energy
+    ---@param count integer количество энергии для получения
+    function Block:receive_energy(count)
+        self.energy = self.energy + count
         if self.energy > self.max_energy then
             self.energy = self.max_energy
         end
     end
 
     -- пытается потратить опрежеленное количество энергии в блоке, взвращяет false если в блоке недостаточно энергии, в случае удачной проверки сразу тратит энергию
-    ---@param energy integer количество энергии для траты
-    function Block:try_use_energy(energy)
-        if self.energy >= energy then
-            self.energy = self.energy - energy
+    ---@param count integer количество энергии для траты
+    function Block:try_use_energy(count)
+        if self.energy >= count then
+            self.energy = self.energy - count
             return true
         end
         return false
@@ -170,9 +168,9 @@ function Energy_blocks:new(x, y, z, id, energy, max_energy, block_type, meta)
 
     -- вызывается когда блоку нужно отдать энергию другому блоку
     ---@param energy_block Energy_block блок которому мы должны передать энергию
-    ---@param energy integer количество энергии для отдачи
-    function Block:give_energy(energy_block, energy)
-        if self.energy >= energy then
+    ---@param count integer количество энергии для отдачи
+    function Block:give_energy(energy_block, count)
+        if self.energy >= count then
             local to_give = energy_block:count_max_energy(energy)
             if self:try_use_energy(to_give) then
                 energy_block:receive_energy(to_give)

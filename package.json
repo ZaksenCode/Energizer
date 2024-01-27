@@ -2,5 +2,6 @@
     "id": "energizer",
     "title": "Energizer",
     "version": "0.1",
-    "description": "Library for energy"
+    "creator": "Zaksen",
+    "description": "Библиотека для создание различных блоков связыных с энергией"
 }
