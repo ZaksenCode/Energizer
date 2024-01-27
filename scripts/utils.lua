@@ -10,6 +10,7 @@ function split(str, splitter)
     return s
 end
 
+-- Разделяет строку на элементы по пробелам
 function tokens(str)
     local s = {}
     if str == nil then
@@ -20,7 +21,6 @@ function tokens(str)
     end
     return s
 end
-
 
 -- выводит таблицу в читаемом виде (by @Dagger)
 ---@param tbl table таблица которая будет выводится
@@ -72,26 +72,6 @@ function tbl_to_pos(tbl)
     return tbl[1], tbl[2], tbl[3]
 end
 
--- Преобразование таблицы в строку (Выкинит ошибку если есть функции)
----@param tbl table таблица для сериализации
----@return string string строка из таблица
-function tbl_to_str(tbl)
-    local result = ""
-
-    if tbl == nil then
-        return result
-    end
-
-    for key, value in pairs(tbl) do
-        if type(value) == "table" then
-            result = result .. tbl_to_str(value)
-        else
-            result = result .. key .. ":" .. value .. "\n"
-        end
-    end
-    return result
-end
-
 -- Сохранение таблицы блоков в файл
 ---@param blocks_tbl table таблица блоков
 function save_blocks_tbl(blocks_tbl)
@@ -99,16 +79,16 @@ function save_blocks_tbl(blocks_tbl)
 
     for key, block in pairs(blocks_tbl) do
         local data = key .. "\n"
+        data = data .. "type:" .. block.type .. "\n"
         data = data .. "meta-"
         if block:get_all_meta() ~= nil then
-            for key, value in pairs(block:get_all_meta()) do
-                data = data .. key .. ":" .. value .. ","
+            for meta_key, value in pairs(block:get_all_meta()) do
+                data = data .. meta_key .. ":" .. value .. ","
             end
         end
         data = data .. "\n"
         data = data .. "id:" .. block.id .. "\n"
-        data = data .. "energy:" .. block:get_energy() .. "\n"
-        data = data .. "max_energy:" .. block:get_max_energy() .. "\n"
+        data = data .. "mod_id:" .. block.mod_id .. "\n"
         result = result .. data
     end
 
