@@ -37,6 +37,19 @@ function print_table(tbl, indent)
     end
 end
 
+-- Проверяет есть ли в таблице определенный элемент
+---@param table table таблица с который мы смотрим
+---@param element any элемент для проверки
+function table.contains(table, element)
+  for _, value in pairs(table) do
+    if value == element then
+      return true
+    end
+  end
+  return false
+end
+
+
 -- Наследование от родителя
 ---@param child table таблица которая будет наследовать 
 ---@param parent table таблица которую будут наследовать 
@@ -93,4 +106,22 @@ function save_blocks_tbl(blocks_tbl)
     end
 
     file.write("world:energizer_blocks.txt", result)
+end
+
+-- Сохранение таблицы сетей в файл
+---@param networks_tbl table таблица сетей
+function seve_networks_tbl(networks_tbl)
+    local result = ""
+
+    for index, network in pairs(networks_tbl) do
+        local data = "index:" .. index .. "\n"
+        data = data .. "network:"
+        for _, pos in pairs(network) do
+            data = data .. pos .. ","
+        end
+        data = data .. "\n"
+        result = result .. data
+    end
+
+    file.write("world:energizer_networks.txt", result)
 end
