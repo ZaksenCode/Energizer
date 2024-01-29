@@ -1,5 +1,4 @@
 local BLOCK_DATA_SIZE = 5
-local NETWORK_DATA_SIZE = 2
 local was_data_loaded = false
 
 ---@enum BlockType типы блоков
@@ -25,15 +24,6 @@ local Block_functions = {
 
 }
 
--- Хранит всю информацию о сетях
--- [1] = {
---    [1] = -10_10_23
---    [2] = -12_23_42
--- }
-local networks = {
-
-}
-
 local deserialization = {
     ["block"] = function (x, y, z, id, mod_id, meta)
     	CreateBlock(x, y, z, id, mod_id, meta)
@@ -45,32 +35,6 @@ local deserialization = {
     	CreateMachine(x, y, z, id, mod_id, meta)
     end
 }
-
--- Создает новую сеть по последнему индексу и возвращяет его
-local function create_new_network()
-	table.insert(networks, {})
-	return #networks
-end
-
--- Получает информацию о сети по индексу
----@param index integer индекс сети
----@return table data таблица с блоками в сети
-function get_network_data(index)
-	return networks[index]
-end
-
--- Удаляет сеть по индексу
----@param index integer индекс сети
-local function remove_network(index)
-	table.remove(networks, index)
-end
-
--- Добавляет блок в сеть
----@param index integer индекс сети
----@param block Block блок для добавления
-local function add_to_network(index, block_key)
-	table.insert(networks[index], block_key)
-end
 
 -- Создает функцию для чтения определенного типа блока
 ---@param block_type string тип блока для которого будет выполнятся десериализация
@@ -194,18 +158,6 @@ local Energy_block = {}
 function Energy_block:new(x, y, z, id, mod_id, meta, block_type)
     -- свойства
     local lBlock = Block:new(x, y, z, id, mod_id, meta, block_type)
-
-    -- получает индекс сети к которой подключён
-    ---@return integer energy максимальная энергия в данном блоке
-    function lBlock:get_network()
-        return self:get_meta("network")
-    end
-
-     -- получает индекс сети к которой подключён
-     ---@param value integer индекс сети
-     function lBlock:set_network(value)
-         self:set_meta("network", value)
-     end
 
     -- получает количество энергии в данном блоке
     ---@return integer energy энергия в данном блоке
@@ -430,116 +382,6 @@ function CreateMachine(x, y, z, id, mod_id, meta)
     return block
 end
 
--- Добавляет блок в сеть (при установке энерго-блоков)
-function AtachToNetwork(x, y, z)
-    local key = pos_to_key(x, y, z)
-    local nbs = GetBlockNeigbours(x, y, z)
-    -- Если блок был установлен рядом с одним другим блоком
-    if #nbs == 1 then
-    	for _, nb in pairs(nbs) do
-    	    -- Проверяем есть ли сосед подключенные в сеть
-            if nb:get_network() ~= nil then
-                -- Если есть сосед с сеть, добавляемся в эту сеть
-            	add_to_network(nb:get_network(), key)
-            	GetBlock(x, y, z):set_network(nb:get_network())
-            end
-    	end
-    elseif #nbs >= 2 then -- Если соседей больше 1, то переиндексируем все сети в 1
-        local lNetworks = {}
-        -- Проверяем есть ли соседи подключенные в сеть
-        for _, nb in pairs(nbs) do
-            if nb:get_network() ~= nil then
-                -- Записиывам сеть в список подключенных сетей, если она там не содержиться
-                if not table.contains(lNetworks, nb:get_network()) then
-                    table.insert(lNetworks, nb:get_network())
-                end
-            end
-        end
-        table.sort(
-             lNetworks, function(a, b)
-                  return a < b
-             end
-        )
-        local sIndex = 0
-        for index, value in pairs(lNetworks) do
-        	if index ~= 1 then
-        	    for _, pos in pairs(networks[value]) do
-        	    	table.insert(networks[sIndex], pos)
-        	    	GetBlock(key_to_pos(pos)):set_network(sIndex)
-        	    end
-        	else
-        	    sIndex = value
-        	    if index + 1 ~= nil then
-        	    	table.insert(networks[sIndex], key)
-                    GetBlock(key_to_pos(key)):set_network(sIndex)
-        	    end
-        	end
-        end
-        -- TODO - переделать этот костыль
-        if #nbs == 2 then
-            remove_network(lNetworks[2])
-        elseif #nbs == 3 then
-            remove_network(lNetworks[3])
-        	remove_network(lNetworks[2])
-        elseif #nbs == 4 then
-            remove_network(lNetworks[4])
-            remove_network(lNetworks[3])
-        	remove_network(lNetworks[2])
-        elseif #nbs == 5 then
-            remove_network(lNetworks[5])
-            remove_network(lNetworks[4])
-            remove_network(lNetworks[3])
-            remove_network(lNetworks[2])
-        elseif #nbs == 6 then
-            remove_network(lNetworks[6])
-            remove_network(lNetworks[5])
-            remove_network(lNetworks[4])
-            remove_network(lNetworks[3])
-            remove_network(lNetworks[2])
-        end
-        GetBlock(x, y, z):set_network(sIndex)
-        add_to_network(sIndex, key)
-    else -- Если блок не был установлен рядом с другими блоками
-        local new_network = create_new_network()
-        GetBlock(x, y, z):set_network(new_network)
-        add_to_network(new_network, key)
-    end
-end
-
--- Удаляет блок из сети (при разрушении)
-function DetachFromNetwork(x, y, z)
-    local key = pos_to_key(x, y, z)
-    local nbs = GetBlockNeigbours(x, y, z)
-
-    local block_network_index = 0
-    local block_pos_index = 0
-    for index, pos_tbl in pairs(networks) do
-         for pos_idx, pos in pairs(pos_tbl) do
-              if key == pos then
-                   block_network_index = index
-                   block_pos_index = pos_idx
-              end
-         end
-    end
-
-    -- Если 0 значит блок не в сети
-    if block_network_index ~= 0 then
-        -- Если нет соседей, то отключаем блок от сети и удаляем её
-        if #nbs == 0 then
-            table.remove(networks[block_network_index], block_pos_index)
-            -- Дополнительно проверяем остались ли в сети другие блоки (этого не должно происходить)
-            if #networks[block_network_index] == 0 then
-                remove_network(block_network_index)
-            end
-        elseif #nbs == 1 then -- Если один сосед, то отключаем блок от сети
-            table.remove(networks[block_network_index], block_pos_index)
-        elseif #nbs >= 2 then -- Если соседей больше двух, то проверяем есть ли сойденение в другом месте, если нету, делим сеть на две отдельных
-            -- TODO - сделать логику разрыва сети
-            print("Сделать разрыв сети")
-        end
-    end
-end
-
 -- Получает уже созданый объект(блок)
 ---@param x integer позиция блока по x
 ---@param y integer позиция блока по y
@@ -580,7 +422,6 @@ end
 
 function LoadWorldData()
     LoadBlocksData()
-    LoadNetworksData()
 	was_data_loaded = true
 end
 
@@ -615,30 +456,7 @@ function LoadBlocksData()
     end
 end
 
--- Загрузка данных о сетях
-function LoadNetworksData()
-	if file.exists("world:energizer_networks.txt") then
-        local data = file.read("world:energizer_networks.txt")
-        local data_func = tokens(data)
-        local data_size = #data_func
-        for i = 1, data_size, NETWORK_DATA_SIZE do
-            -- local index = split(data_func[i], ":")
-            local pos_tbl = split(split(data_func[i+1], ":")[2], ",")
-            local new_network = create_new_network()
-            print(new_network)
-            for _, pos in pairs(pos_tbl) do
-                add_to_network(new_network, pos)
-                local x, y, z = key_to_pos(pos)
-                GetBlock(x, y, z):set_network(new_network)
-                print(GetBlock(x, y, z):get_network(new_network))
-            end
-        end
-	end
-	print_table(networks)
-end
-
 -- Сохранение данных о блоках
 function SaveWorldData()
     save_blocks_tbl(Blocks_holder)
-    seve_networks_tbl(networks)
 end
