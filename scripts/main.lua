@@ -278,14 +278,6 @@ function Wire:new(x, y, z, id, mod_id, meta)
         return machines
     end
 
-    function lBlock:get_recivers()
-
-    end
-
-    function lBlock:get_senders()
-
-    end
-
     setmetatable(lBlock, self)
     self.__index = pos_to_key(x, y, z)
     return lBlock
