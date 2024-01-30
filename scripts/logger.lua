@@ -8,7 +8,7 @@ function Logger:new(name, debug)
 	-- свойства
     local logger = {}
     logger.name = name;
-    logger.debug = debug;
+    logger.is_debug = debug;
 
     function logger:get_name()
     	return "[" .. self.name .. "]"
@@ -35,7 +35,7 @@ function Logger:new(name, debug)
     -- Выводит сообщение отладки в консоль
     ---@param message string тест сообщение
     function logger:debug(message)
-        if debug == true then
+        if self.is_debug == true then
         	print(self:get_name() .. " debug: " .. message)
         end
     end
