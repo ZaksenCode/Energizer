@@ -40,6 +40,23 @@ function Logger:new(name, debug)
         end
     end
 
+    -- Выводит таблицу в консоль
+    ---@param tbl table таблица для вывода
+    function logger:table(tbl, indent)
+        if self.is_debug == true then
+            if not indent then indent = 0 end
+             for k, v in pairs(tbl) do
+                 formatting = string.rep("  ", indent) .. k .. ": "
+                 if type(v) == "table" then
+                     print(formatting)
+                     print_table(v, indent+1)
+                 else
+                    print(formatting .. tostring(v) .. "(" .. type(v) .. ")")
+                 end
+             end
+        end
+    end
+
     setmetatable(logger, self)
     self.__index = self
     return logger

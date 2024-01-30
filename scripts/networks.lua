@@ -36,20 +36,16 @@ function AttachToNetwork(x, y, z)
 	local nbs = GetNeigbourEnergies(x, y, z)
 
 	if #nbs == 0 then -- Если рядом нету блоков
-	    ELogger:debug("Block on " .. x .. " " .. y .. " " .. z .. " create new network")
 	    -- Создаем новую сеть
 		local index = CreateNetwork()
-		ELogger:debug("New index is: " .. index)
 		block:set_network(index)
         addIntoNetwork(index, pos_key, block_type)
 	elseif #nbs == 1 then -- Если рядом один блок
-	    ELogger:debug("Block on " .. x .. " " .. y .. " " .. z .. " connecting into network")
 	    -- Подключаемся к нему в сеть
 	    local index = nbs[1]:get_network()
 	    block:set_network(index)
 	    addIntoNetwork(index, pos_key, block_type)
 	else -- Если рядом два и более блоков
-	    ELogger:debug("Block on " .. x .. " " .. y .. " " .. z .. " combine network")
         -- Проверяем в каких они сетях
         local lNetworks = {}
         for _, nb in pairs(nbs) do
@@ -79,40 +75,112 @@ function AttachToNetwork(x, y, z)
         block:set_network(minIdx)
         addIntoNetwork(minIdx, pos_key, block_type)
 
-        ELogger:debug("Сойденино несколько сетей:")
-        print_table(lNetworks)
-        ELogger:debug("В одну: " .. minIdx)
+        ELogger:debug("Combine networks:")
+        ELogger:table(lNetworks)
+        ELogger:debug("Into: " .. minIdx)
+	end
+end
+
+local function countNetwork(x, y, z, visited, is_main)
+    visited[pos_to_key(x, y, z)] = pos_to_key(x, y, z)
+	local nbs = GetNeigbourEnergies(x, y, z)
+	for _, nb in pairs(nbs) do
+	    local nx, ny, nz = nb:get_position()
+		if visited[pos_to_key(nx, ny, nz)] == nil then
+			countNetwork(nx, ny, nz, visited, false)
+		end
+	end
+	if is_main then
+		return visited
 	end
 end
 
 function DetachFromNetwotk(x, y, z)
-    local block = GetBlock(x, y, z)
     local pos_key = pos_to_key(x, y, z)
+    ELogger:debug("Pos: " .. pos_key)
     local nbs = GetNeigbourEnergies(x, y, z)
     local block_network_index
     local block_pos_index
     -- Получения индекса сети и индекса блока из его позиции
     for network_index, network in pairs(Networks) do
     	for block_index, block_data in pairs(network) do
-    		if block[2] == pos_key then
+    		if block_data[2] == pos_key then
     			block_pos_index = block_index
     			block_network_index = network_index
     		end
     	end
     end
-    if #nbs == 0 then -- Если рядом нету блоков
-    	-- Удаляем блок из сети
-    	removeFromNetwork(block_network_index, block_pos_index)
-    	-- Проверяем осталось ли в сети блока другие блоки (такого быть не должно)
-    	if #Networks[block_network_index] == 0 then
-    	    -- Удляем сеть блока
-    		RemoveNetwork(block_network_index)
-    	end
-    elseif #nbs == 1 then -- Если рядом один блок
-    	-- Удаляем блок из сети
-        removeFromNetwork(block_network_index, block_pos_index)
-    else -- Если рядом два и более блоков
-
+    if block_network_index ~= nil then
+        if #nbs == 0 then -- Если рядом нету блоков
+            -- Удаляем блок из сети
+            removeFromNetwork(block_network_index, block_pos_index)
+            -- Проверяем остались ли в сети блока другие блоки (такого быть не должно)
+            if #Networks[block_network_index] == 0 then
+                -- Удляем сеть блока
+                RemoveNetwork(block_network_index)
+            end
+        elseif #nbs == 1 then -- Если рядом один блок
+            -- Удаляем блок из сети
+            removeFromNetwork(block_network_index, block_pos_index)
+        else -- Если рядом два и более блоков
+            -- Алгоритм для разрыва сети
+            -- 0: Удаляем текущаю сеть
+            -- 1: Получаем таблицы блоков для всех соседей
+            -- 2: Сравниваем все таблицы друг с другом
+            -- 3: Удаляем одинаковые таблицы
+            -- 4: Создаем сети для оставщихся таблиц
+            -- TODO реализовать разрыв сети
+            ELogger:debug("Реализовать разрыв сети!")
+            -- удаляем текущаю сеть
+            table.remove(Networks, block_network_index)
+            -- Получаем таблицы блоков для всех соседей
+            local allNetworks = {}
+            for _, nb in pairs(nbs) do
+            	local lNetwork = {}
+            	local nx, ny, nz = nb:get_position()
+            	lNetwork = countNetwork(nx, ny, nz, {[pos_to_key(x, y, z)] = pos_to_key(x, y, z)}, true)
+            	table.insert(allNetworks, lNetwork)
+            end
+            -- Сравниваем все таблицы друг с другом
+            local networkIndexs = {}
+            for index, lNetwork in pairs(allNetworks) do
+                for index2, lNetwork2 in pairs(allNetworks) do
+                    if index ~= index2 then
+                        ELogger:debug("Первая под сеть : " .. index)
+                        ELogger:table(lNetwork)
+                        ELogger:debug("Вторая под сеть : " .. index2)
+                        ELogger:table(lNetwork2)
+                        if compare_table(lNetwork, lNetwork2, true) then
+                            ELogger:debug("Есть одинаковые сети: " .. index .. " и " .. index2)
+                            -- Удаляем одну их таблиц
+                            if not table.contains(networkIndexs, index) and not table.contains(networkIndexs, index2) then
+                                table.insert(networkIndexs, index2)
+                            end
+                        end
+                    end
+                end
+            end
+            table.sort(networkIndexs, function (a, b)
+              return a > b
+            end)
+            ELogger:table(networkIndexs)
+            -- Удаляем одинаковые таблицы
+            --for _, network in pairs(allNetworks) do
+            --  table.remove(allNetworks, index_of(allNetworks, network))
+            --end
+            --ELogger:table(networkIndexs)
+            -- Создаем сети для оставщихся таблиц
+            --for _, network in pairs(allNetworks) do
+            --    local network_index = CreateNetwork()
+            --	for key, _ in pairs(network) do
+            --		local block = GetBlock(key_to_pos(key))
+            --		local type = block:get_type()
+            --		if key ~= pos_key then
+            --			addIntoNetwork(network_index, key, type)
+            --		end
+            --	end
+            --end
+        end
     end
     ELogger:debug("Block on " .. x .. " " .. y .. " " .. z .. " disconnect from network")
 end
@@ -131,8 +199,11 @@ function LoadNetworksData()
             for _, key in pairs(ntw_blocks) do
             	local block_pos = split(key, ",")[1]
             	local block_type = split(key, ",")[2]
-                addIntoNetwork(network_idx, block_pos, block_type)
-            	GetBlock(key_to_pos(block_pos)):set_network(network_idx)
+            	local block = GetBlock(key_to_pos(block_pos))
+                if block ~= nil then
+                    addIntoNetwork(network_idx, block_pos, block_type)
+                    block:set_network(network_idx)
+                end
             end
         end
         ELogger:debug("Networks was loaded!")
