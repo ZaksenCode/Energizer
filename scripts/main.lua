@@ -1,4 +1,5 @@
 local BLOCK_DATA_SIZE = 5
+local NETWORK_DATA_SIZE = 1
 local was_data_loaded = false
 
 ---@enum BlockType типы блоков
@@ -14,6 +15,11 @@ MachineType = {
     Sender = "sender" -- Означает что блок должен отправлять энергию
 }
 
+-- Хранит все созданые сети
+local Networks = {
+
+}
+
 -- Хранит все созданые блоки
 local Blocks_holder = {
 
@@ -23,6 +29,22 @@ local Blocks_holder = {
 local Block_functions = {
 
 }
+
+-- Создает новую сеть и возвращяет её индекс
+local function create_network()
+    -- Создаем новую сеть с последним индексом
+    local index = #Networks + 1
+	Networks[index] = {}
+	ELogger:debug("Была создана новая сеть с индексом: " .. index)
+	return index
+end
+
+-- Удаляет сеть по индексу
+---@param index integer индекс сети для удаления
+local function remove_network(index)
+    Networks[index] = nil
+    ELogger:debug("Была создана новая сеть с индексом: " .. index)
+end
 
 local deserialization = {
     ["block"] = function (x, y, z, id, mod_id, meta)
@@ -241,41 +263,8 @@ function Wire:new(x, y, z, id, mod_id, meta)
 	-- свойства
     local lBlock = Energy_block:new(x, y, z, id, mod_id, meta, BlockType.Wire)
 
-    -- Просчет всех проводова с помощью DFS алгоритма
-    ---@param x integer начало просчета по x
-    ---@param y integer начало просчета по y
-    ---@param z integer начало просчета по z
-    ---@param visited table таблица с пройдеными блоками (при старте должно быть {})
-    function lBlock:get_all_network(x, y, z, visited)
-    	local block = GetBlock(x, y, z)
-        if block:get_type() == BlockType.Wire then
-            visited[pos_to_key(x, y, z)] = true
-            local nbs = GetBlockNeigbours(x, y, z)
-            for _, value in pairs(nbs) do
-                local nx, ny, nz = value:get_position()
-                local key = pos_to_key(nx, ny, nz)
-                if visited[key] == nil then
-                	visited[key] = true
-                    self:get_all_network(nx, ny, nz, visited)
-               end
-            end
-        end
-        return visited
-    end
-
-    -- Получает все механизмы в сети
-    -- TODO - оптимизировать просчет
-    function lBlock:get_machines()
-        local x, y, z = self:get_position()
-        local network = self:get_all_network(x, y, z, {})
-        local machines = {}
-        for key, _ in pairs(network) do
-        	local machine = GetBlock(key_to_pos(key))
-        	if machine:get_type() == BlockType.Machine then
-        		machines[key] = machine
-        	end
-        end
-        return machines
+    function lBlock:receive_energy(count)
+        -- TODO - равномерное распределение энергии по всем механизмам
     end
 
     setmetatable(lBlock, self)
@@ -383,6 +372,15 @@ function GetBlock(x, y, z)
     return Blocks_holder[pos_to_key(x, y, z)]
 end
 
+-- Удаляет объект (при разрушении блока)
+---@param x integer позиция блока по x
+---@param y integer позиция блока по y
+---@param z integer позиция блока по z
+function RemoveBlock(x, y, z)
+    Blocks_holder[pos_to_key(x, y, z)] = nil
+end
+
+-- Получает все ближайшие блоки
 function GetBlockNeigbours(x, y, z)
 	local nb = {}
 	for _, dir in pairs(directions) do
@@ -394,12 +392,27 @@ function GetBlockNeigbours(x, y, z)
 	return nb
 end
 
--- Удаляет объект (при разрушении блока)
----@param x integer позиция блока по x
----@param y integer позиция блока по y
----@param z integer позиция блока по z
-function RemoveBlock(x, y, z)
-    Blocks_holder[pos_to_key(x, y, z)] = nil
+-- Получает все ближайшие механизмы
+function GetNeigbourMachines(x, y, z)
+	local machines = GetBlockNeigbours(x, y, z)
+	for index, machine in pairs(machines) do
+		if machine:get_type() ~= BlockType.Machine then
+			machines:remove(index)
+		end
+	end
+	return machines
+end
+
+
+-- Получает все ближайшие провода
+function GetNeigbourWires(x, y, z)
+	local wires = GetBlockNeigbours(x, y, z)
+	for index, wire in pairs(wires) do
+		if wire:get_type() ~= BlockType.Wire then
+			wires:remove(index)
+		end
+	end
+	return wires
 end
 
 function on_blocks_tick(tps)
@@ -423,6 +436,7 @@ function LoadBlocksData()
         local data = file.read("world:energizer_blocks.txt")
         local data_func = tokens(data)
         local data_size = #data_func
+        ELogger:debug("Всего блоков для загрузки: " .. (data_size / BLOCK_DATA_SIZE))
         for i = 1, data_size, BLOCK_DATA_SIZE do
             local x, y, z = key_to_pos(data_func[i])
             local type = split(data_func[i+1], ":")[2]
@@ -443,12 +457,43 @@ function LoadBlocksData()
             local func = deserialization[type]
             if func ~= nil then
                 func(x, y, z, id, mod_id, meta_normalized)
+            else
+                ELogger:warn("для блока с типом: " .. type .. " не была найдена функция для загрузки!")
             end
         end
+        ELogger:debug("Блоки были успешно загружены!")
+    end
+end
+
+-- TODO - реализовать загрузку сетей
+-- Загрузка данных о сетях
+function LoadNetworksData()
+    if file.exists("world:energizer_networks.txt") then
+        local data = file.read("world:energizer_networks.txt")
+        local data_func = tokens(data)
+        local data_size = #data_func
+        ELogger:debug("Всего сетей для загрузки: " .. (data_size / NETWORK_DATA_SIZE))
+        for i = 1, data_size, NETWORK_DATA_SIZE do
+            local ntw_tbl = split(data_func[i], ":")[2]
+            local ntw_blocks = split(ntw_tbl, ";")
+            local network_idx = create_network()
+            for _, key in pairs(ntw_blocks) do
+            	local block_pos = split(key, ",")[1]
+            	local block_type = split(key, ",")[2]
+            	-- TODO добавление в сеть
+
+            	-- добавляем...
+
+            	GetBlock(key_to_pos(block_pos)):set_network(network_idx)
+            end
+            local x, y, z = key_to_pos(data_func[i])
+        end
+        ELogger:debug("сети были успешно загружены!")
     end
 end
 
 -- Сохранение данных о блоках
 function SaveWorldData()
     save_blocks_tbl(Blocks_holder)
+    seve_networks_tbl(Networks)
 end

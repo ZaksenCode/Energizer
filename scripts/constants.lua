@@ -1,3 +1,5 @@
+run_api_with_debug = true
+
 directions = {
     [0] = {0, 0, 1},  -- Перед
     [1] = {-1, 0, 0}, -- Лево

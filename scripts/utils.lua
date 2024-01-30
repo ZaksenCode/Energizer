@@ -96,7 +96,11 @@ function save_blocks_tbl(blocks_tbl)
         data = data .. "meta-"
         if block:get_all_meta() ~= nil then
             for meta_key, value in pairs(block:get_all_meta()) do
-                data = data .. meta_key .. ":" .. value .. ","
+                if type(value) ~= "table" then
+                    data = data .. meta_key .. ":" .. value .. ","
+                else
+                    ELogger:warn("в данный момент сохранение таблиц не доступно, все таблицы будут потеряны!")
+                end
             end
         end
         data = data .. "\n"
@@ -106,6 +110,7 @@ function save_blocks_tbl(blocks_tbl)
     end
 
     file.write("world:energizer_blocks.txt", result)
+    ELogger:debug("блоки были успешно сохранены!")
 end
 
 -- Сохранение таблицы сетей в файл
@@ -113,15 +118,16 @@ end
 function seve_networks_tbl(networks_tbl)
     local result = ""
 
-    for index, network in pairs(networks_tbl) do
-        local data = "index:" .. index .. "\n"
-        data = data .. "network:"
+    for _, network in pairs(networks_tbl) do
+        local data = "network:"
         for _, pos in pairs(network) do
-            data = data .. pos .. ","
+            -- network:-2_16_-36,machine;-3_16_-36,wire;
+            data = data .. pos .. "," .. "type" .. ";"
         end
         data = data .. "\n"
         result = result .. data
     end
 
     file.write("world:energizer_networks.txt", result)
+    ELogger:debug("сети были успешно сохранены!")
 end
