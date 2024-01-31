@@ -49,7 +49,7 @@ function Logger:new(name, debug)
                  formatting = string.rep("  ", indent) .. k .. ": "
                  if type(v) == "table" then
                      print(formatting)
-                     print_table(v, indent+1)
+                     self:table(v, indent+1)
                  else
                     print(formatting .. tostring(v) .. "(" .. type(v) .. ")")
                  end

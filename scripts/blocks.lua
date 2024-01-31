@@ -340,7 +340,7 @@ end
 ---@param mod_id string Строковый ид мода
 ---@return Machine_block block объект класса Machine_block
 function CreateMachine(x, y, z, id, mod_id, meta)
-local func = LoadBlockFunc(id)
+    local func = LoadBlockFunc(id)
     local block = Machine_block:new(x, y, z, id, mod_id, meta, func)
     Blocks_holder[pos_to_key(x, y, z)] = block
     return block

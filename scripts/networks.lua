@@ -110,6 +110,7 @@ function DetachFromNetwotk(x, y, z)
     		end
     	end
     end
+    -- TODO пофиксить странные индексы сети при создании новых сетей
     if block_network_index ~= nil then
         if #nbs == 0 then -- Если рядом нету блоков
             -- Удаляем блок из сети
@@ -129,8 +130,6 @@ function DetachFromNetwotk(x, y, z)
             -- 2: Сравниваем все таблицы друг с другом
             -- 3: Удаляем одинаковые таблицы
             -- 4: Создаем сети для оставщихся таблиц
-            -- TODO реализовать разрыв сети
-            ELogger:debug("Реализовать разрыв сети!")
             -- удаляем текущаю сеть
             table.remove(Networks, block_network_index)
             -- Получаем таблицы блоков для всех соседей
@@ -146,13 +145,8 @@ function DetachFromNetwotk(x, y, z)
             for index, lNetwork in pairs(allNetworks) do
                 for index2, lNetwork2 in pairs(allNetworks) do
                     if index ~= index2 then
-                        ELogger:debug("Первая под сеть : " .. index)
-                        ELogger:table(lNetwork)
-                        ELogger:debug("Вторая под сеть : " .. index2)
-                        ELogger:table(lNetwork2)
                         if compare_table(lNetwork, lNetwork2, true) then
-                            ELogger:debug("Есть одинаковые сети: " .. index .. " и " .. index2)
-                            -- Удаляем одну их таблиц
+                            -- Добавляем одинаковые сети в таблицу
                             if not table.contains(networkIndexs, index) and not table.contains(networkIndexs, index2) then
                                 table.insert(networkIndexs, index2)
                             end
@@ -163,26 +157,26 @@ function DetachFromNetwotk(x, y, z)
             table.sort(networkIndexs, function (a, b)
               return a > b
             end)
-            ELogger:table(networkIndexs)
             -- Удаляем одинаковые таблицы
-            --for _, network in pairs(allNetworks) do
-            --  table.remove(allNetworks, index_of(allNetworks, network))
-            --end
-            --ELogger:table(networkIndexs)
+            for index, network in pairs(allNetworks) do
+                if table.contains(networkIndexs, index) then
+                	table.remove(allNetworks, index_of(allNetworks, network))
+                end
+            end
             -- Создаем сети для оставщихся таблиц
-            --for _, network in pairs(allNetworks) do
-            --    local network_index = CreateNetwork()
-            --	for key, _ in pairs(network) do
-            --		local block = GetBlock(key_to_pos(key))
-            --		local type = block:get_type()
-            --		if key ~= pos_key then
-            --			addIntoNetwork(network_index, key, type)
-            --		end
-            --	end
-            --end
+            for _, network in pairs(allNetworks) do
+                local network_index = CreateNetwork()
+            	for key, _ in pairs(network) do
+            		local block = GetBlock(key_to_pos(key))
+            		local type = block:get_type()
+            		if key ~= pos_key then
+            			addIntoNetwork(network_index, key, type)
+            			block:set_network(network_index)
+            		end
+            	end
+            end
         end
     end
-    ELogger:debug("Block on " .. x .. " " .. y .. " " .. z .. " disconnect from network")
 end
 
 -- Загрузка данных о сетях
