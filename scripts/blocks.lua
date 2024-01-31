@@ -199,6 +199,10 @@ function Energy_block:new(x, y, z, id, mod_id, meta, block_type, logic_function)
         self:set_meta("energy", value)
     end
 
+    function lBlock:is_energy_max()
+    	return self:get_energy() == self:get_max_energy()
+    end
+
     -- возвращяет количество энергии которое может вместить из данного количества
     ---@return integer energy_in количество энергии которое может вместится из данного числа
     function lBlock:count_max_energy(count)
@@ -233,11 +237,27 @@ function Energy_block:new(x, y, z, id, mod_id, meta, block_type, logic_function)
     ---@param energy_block Energy_block блок которому мы должны передать энергию
     ---@param count integer количество энергии для отдачи
     function lBlock:give_energy(energy_block, count)
-        if self:get_energy() >= count then
+        if self:get_energy() >= count and not energy_block:is_energy_max() then
             local to_give = energy_block:count_max_energy(count)
             if self:try_use_energy(to_give) then
                 energy_block:receive_energy(to_give)
             end
+        end
+    end
+
+    -- вызывается когда блоку нужно отдать энергию всем соседним блокам
+    ---@param count integer количество энергии для отдачи
+    function lBlock:give_energy_neighboues(count)
+        local nbs = GetNeigbourEnergies(self:get_position())
+        local not_max_nbs = {}
+        for _, nb in pairs(nbs)
+            if not nb:is_energy_max() then
+            	table.insert(not_max_nbs, nb)
+            end
+        end
+        local to_give = count / #not_max_nbs
+        for _, nb in pairs(not_max_nbs) do
+        	self:give_energy(nb, to_give)
         end
     end
 
@@ -251,7 +271,6 @@ extended(Energy_block, Block)
 ---@class Wire : Energy_block
 local Wire = {}
 
--- TODO - добавить кеш для сети, чтобы извабится от пересчета
 ---@param x integer Позиция блока по x
 ---@param y integer Позиция блока по y
 ---@param z integer Позиция блока по z
