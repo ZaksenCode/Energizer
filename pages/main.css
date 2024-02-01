@@ -1,9 +1,23 @@
+:root {
+    --primary: #181A1E;
+    --secondery: #23272D;
+    --other: #474B54;
+    --other2: #646C75;
+}
+
 .main-container {
     width: 100%;
     height: 100%;
 }
 
+.header {
+    width: 100%;
+    height: 60px;
+    background-color: var(--secondery);
+}
+
 .container {
-    max-width: 1600px;
-    background-color: burlywood;
+    margin: auto;
+    max-width: 1400px;
+    background-color: var(--primary);
 }
