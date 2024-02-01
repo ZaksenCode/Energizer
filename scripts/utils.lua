@@ -22,20 +22,18 @@ function tokens(str)
     return s
 end
 
--- выводит таблицу в читаемом виде (by @Dagger)
----@param tbl table таблица которая будет выводится
-function print_table(tbl, indent)
-    if not indent then indent = 0 end
-    for k, v in pairs(tbl) do
-        formatting = string.rep("  ", indent) .. k .. ": "
-        if type(v) == "table" then
-            print(formatting)
-            print_table(v, indent+1)
-        else
-            print(formatting .. tostring(v) .. "(" .. type(v) .. ")")
-        end
+-- Проверяет есть ли в таблице определенный элемент
+---@param table table таблица с который мы смотрим
+---@param element any элемент для проверки
+function table.contains(table, element)
+  for _, value in pairs(table) do
+    if value == element then
+      return true
     end
+  end
+  return false
 end
+
 
 -- Наследование от родителя
 ---@param child table таблица которая будет наследовать 
@@ -72,25 +70,30 @@ function tbl_to_pos(tbl)
     return tbl[1], tbl[2], tbl[3]
 end
 
--- Сохранение таблицы блоков в файл
----@param blocks_tbl table таблица блоков
-function save_blocks_tbl(blocks_tbl)
-    local result = ""
-
-    for key, block in pairs(blocks_tbl) do
-        local data = key .. "\n"
-        data = data .. "type:" .. block.type .. "\n"
-        data = data .. "meta-"
-        if block:get_all_meta() ~= nil then
-            for meta_key, value in pairs(block:get_all_meta()) do
-                data = data .. meta_key .. ":" .. value .. ","
+-- Сравнение таблиц
+function compare_table(tbl, tbl2, compare_indexs)
+    if not compare_indexs then
+    	for index, value in pairs(tbl) do
+        	if value ~= tbl2[index] then
+        		return false
+        	end
+        end
+    else
+        for index, value in pairs(tbl) do
+            if index ~= index_of(tbl2, value) then
+            	return false
             end
         end
-        data = data .. "\n"
-        data = data .. "id:" .. block.id .. "\n"
-        data = data .. "mod_id:" .. block.mod_id .. "\n"
-        result = result .. data
     end
+	return true
+end
 
-    file.write("world:energizer_blocks.txt", result)
+-- Получение индекса элемента
+function index_of(array, value)
+    for i, v in pairs(array) do
+        if v == value then
+            return i
+        end
+    end
+    return nil
 end
