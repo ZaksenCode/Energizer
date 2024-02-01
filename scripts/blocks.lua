@@ -121,7 +121,6 @@ function Block:new(x, y, z, id, mod_id, meta, block_type, logic_function)
     end
 
     -- проверяет прогружен ли блок
-    -- TODO - как-то оптимизировать процесс отсеивание не прогруженых блоков
     function lBlock:is_missing()
         if get_block(self:get_position()) == -1 then
         	return true
@@ -182,15 +181,15 @@ function Energy_block:new(x, y, z, id, mod_id, meta, block_type, logic_function)
     end
 
     -- получает количество энергии в данном блоке
-    ---@return integer energy энергия в данном блоке
+    ---@return number energy энергия в данном блоке
     function lBlock:get_energy()
-        return self:get_meta("energy")
+        return tonumber(self:get_meta("energy"))
     end
 
     -- получает максимальное количество энергии в данном блоке
-    ---@return integer energy максимальная энергия в данном блоке
+    ---@return number energy максимальная энергия в данном блоке
     function lBlock:get_max_energy()
-        return self:get_meta("max_energy")
+        return tonumber(self:get_meta("max_energy"))
     end
 
     -- получает максимальное количество энергии в данном блоке
@@ -250,7 +249,7 @@ function Energy_block:new(x, y, z, id, mod_id, meta, block_type, logic_function)
     function lBlock:give_energy_neighboues(count)
         local nbs = GetNeigbourEnergies(self:get_position())
         local not_max_nbs = {}
-        for _, nb in pairs(nbs)
+        for _, nb in pairs(nbs) do
             if not nb:is_energy_max() then
             	table.insert(not_max_nbs, nb)
             end
@@ -282,8 +281,28 @@ function Wire:new(x, y, z, id, mod_id, meta, logic_function)
 	-- свойства
     local lBlock = Energy_block:new(x, y, z, id, mod_id, meta, BlockType.Wire, logic_function)
 
+    function lBlock:is_energy_max()
+        return false
+    end
+
+    function lBlock:count_max_energy(count)
+        return count
+    end
+
     function lBlock:receive_energy(count)
-        -- TODO - равномерное распределение энергии по всем механизмам
+        -- равномерное распределение энергии по всем механизмам
+        local ntx_index = self:get_network()
+        local network_recipitents = GetRecipientsIn(ntx_index)
+        local not_max_nbs = {}
+        for _, nb in pairs(network_recipitents) do
+            if not nb:is_energy_max() then
+                table.insert(not_max_nbs, nb)
+            end
+        end
+        local to_give = count / #not_max_nbs
+        for _, nb in pairs(not_max_nbs) do
+            nb:receive_energy( to_give)
+        end
     end
 
     setmetatable(lBlock, self)
@@ -465,7 +484,7 @@ function LoadBlocksData()
             if func ~= nil then
                 func(x, y, z, id, mod_id, meta_normalized)
             else
-                ELogger:warn("For block with type " .. type .. " не была найдена функция для загрузки!")
+                ELogger:warn("For block with type " .. type .. " load function was not found!")
             end
         end
         ELogger:debug("Blocks was loaded!")

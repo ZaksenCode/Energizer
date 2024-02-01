@@ -28,6 +28,37 @@ local function removeFromNetwork(ntw_index, block_index)
     table.remove(Networks[ntw_index], block_index)
 end
 
+-- Получает все блоки в сети
+function GetAllIn(index)
+    local result = {}
+    for _, block_data in pairs(Networks[index]) do
+        table.insert(result, GetBlock(key_to_pos(block_data[2])))
+    end
+    return result
+end
+
+-- Получает все механизмы в сети
+function GetMachinesIn(index)
+    local result = {}
+    for _, block_data in pairs(Networks[index]) do
+        if block_data[1] == BlockType.Machine then
+        	 table.insert(result, GetBlock(key_to_pos(block_data[2])))
+        end
+    end
+    return result
+end
+
+function GetRecipientsIn(index)
+    local machines = GetMachinesIn(index)
+	local result = {}
+     for _, machine in pairs(machines) do
+        if machine:get_machine_type() == MachineType.Recipient then
+           table.insert(result, machine)
+        end
+    end
+    return result
+end
+
 -- Присоденяет блок к сети
 function AttachToNetwork(x, y, z)
 	local block = GetBlock(x, y, z)
@@ -74,10 +105,6 @@ function AttachToNetwork(x, y, z)
         -- Добавляем в сеть наш блок
         block:set_network(minIdx)
         addIntoNetwork(minIdx, pos_key, block_type)
-
-        ELogger:debug("Combine networks:")
-        ELogger:table(lNetworks)
-        ELogger:debug("Into: " .. minIdx)
 	end
 end
 
@@ -97,7 +124,6 @@ end
 
 function DetachFromNetwotk(x, y, z)
     local pos_key = pos_to_key(x, y, z)
-    ELogger:debug("Pos: " .. pos_key)
     local nbs = GetNeigbourEnergies(x, y, z)
     local block_network_index
     local block_pos_index
