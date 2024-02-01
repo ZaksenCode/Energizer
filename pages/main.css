@@ -1,19 +1,32 @@
 :root {
     --primary: #181A1E;
-    --secondery: #23272D;
+    --secondary: #23272D;
     --other: #474B54;
     --other2: #646C75;
 }
 
-body {
+a:link {
+    text-decoration: none;
+}
+
+a:active {
+    scale: 0.95;
+}
+
+a:visited {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+body, html {
     margin: 0;
+    height: 100%;
+    width: 100%;
 }
 
 .main-container {
-    flex-shrink: 1;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    background-color: var(--primary);
+    height: 100%;
 }
 
 .font {
@@ -24,19 +37,77 @@ body {
 }
 
 .header {
+    height: 60px;
     flex-shrink: 1;
     flex-grow: 1;
-    height: 60px;
-    background-color: var(--secondery);
+    background-color: var(--secondary);
+}
+
+.header-container {
+    max-width: 1200px;
+    display: flex;
+    gap: 20px;
+    padding: 14px;
+    margin: 0 auto;
+}
+
+.creator {
+    margin-left: auto;
+}
+
+.header:last-child {
+    justify-self: end;
+}
+
+.header-link {
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.logo {
+    font-size: 32px;
+    font-weight: 600;
 }
 
 .container {
     flex-shrink: 1;
     flex-grow: 1;
-    background-color: var(--primary);
+    height: 100%;
 }
 
 .sub-container {
     max-width: 1200px;
+    height: 100%;
     margin: 0 auto;
+}
+
+.main-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-info-text {
+    text-align: center;
+}
+
+.main-info-button {
+    align-self: center;
+}
+
+.button {
+    background-color: var(--secondary);
+    border-radius: 20px;
+    padding: 14px;
+    width: 500px;
+    border: 0;
+
+    font-size: 40px;
+    font-weight: 500;
+    height: 100%;
+    text-align: center;
+}
+
+.button:active {
+    scale: 0.95;
 }
