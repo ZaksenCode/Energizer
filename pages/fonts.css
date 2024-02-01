@@ -1,0 +1,29 @@
+@font-face {
+    font-face-name: "ibm";
+    src: local("fonts/IBMPlexMono-Light");
+    font-weight: 300;
+}
+
+@font-face {
+    font-face-name: "ibm";
+    src: local("fonts/IBMPlexMono-Regular");
+    font-weight: 400;
+}
+
+@font-face {
+    font-face-name: "ibm";
+    src: local("fonts/IBMPlexMono-Medium");
+    font-weight: 500;
+}
+
+@font-face {
+    font-face-name: "ibm";
+    src: local("fonts/IBMPlexMono-SemiBold");
+    font-weight: 600;
+}
+
+@font-face {
+    font-face-name: "ibm";
+    src: local("fonts/IBMPlexMono-Bold");
+    font-weight: 700;
+}
