@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Класс EnergyBlock</title>
+    <link href="../../fonts.css" rel="stylesheet">
+    <link href="../../main.css" rel="stylesheet">
+    <link href="../docs.css" rel="stylesheet">
+</head>
+<body>
+<div class="main-container">
+    <header class="header">
+        <div class="header-container">
+            <a href="../../../index.html" class="font header-link logo">
+                Energizer
+            </a>
+            <a href="../docs.html" class="font header-link">
+                документация
+            </a>
+            <a href="../../creator/creator.html" class="font header-link creator">
+                создатель
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sub-container">
+            <div class="classes">
+                <div class="classes-text font">Классы</div>
+                <div class="class-container">
+                    <a class="class-link font" href="block.html">Block</a>
+                    <a class="class-link font" href="">EnergyBlock</a>
+                    <a class="class-link font" href="machine.html">Machine</a>
+                    <a class="class-link font" href="wire.html">Wire</a>
+                    <a class="class-link font" href="logger.html">Logger</a>
+                </div>
+                <div class="classes-text font">Разное</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../other/block-type.html">BlockType</a>
+                    <a class="class-link font" href="../other/machine-type.html">MachineType</a>
+                    <a class="class-link font" href="../other/global-methods.html">Глобальные методы</a>
+                </div>
+                <div class="classes-text font">Примеры</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../examples/block-create.html">Создание блока</a>
+                </div>
+            </div>
+            <div class="class-info">
+                <h1 class="class-name font"> EnergyBlock </h1>
+                <div class="class-description font">
+                    Является основным классом для блоков с энергией, который содержит логику работы с энергией. <br />
+                    Наследует:
+                    <a class="extends-link" href="block.html">Block</a>
+                    <br />
+                    Наследуется:
+                    <a class="extends-link" href="machine.html">Machine</a>,
+                    <a class="extends-link" href="wire.html">Wire</a>
+                </div>
+                <h1 class="class-name font"> Методы </h1>
+                <div class="class-methods font">
+                    <a class="method-link" href="#get_network">get_network()</a>,
+                    <a class="method-link" href="#set_network">set_network()</a>,
+                    <a class="method-link" href="#get_energy">get_energy()</a>,
+                    <a class="method-link" href="#get_max_energy">get_max_energy()</a>,
+                    <a class="method-link" href="#set_energy">set_energy()</a>,
+                    <a class="method-link" href="#is_energy_max">is_energy_max()</a>,
+                    <a class="method-link" href="#count_max_energy">count_max_energy()</a>,
+                    <a class="method-link" href="#receive_energy">receive_energy()</a>,
+                    <a class="method-link" href="#try_use_energy">try_use_energy()</a>,
+                    <a class="method-link" href="#give_energy">give_energy()</a>,
+                    <a class="method-link" href="#give_energy_neighbours">give_energy_neighbours()</a>
+                </div>
+                <h1 id="get_network" class="class-name font">get_network()</h1>
+                <div class="method-description font">
+                    Возвраящет индекс сети в которой он находится
+                </div>
+                <h1 id="set_network" class="class-name font">set_network()</h1>
+                <div class="method-description font">
+                    Принимает один аргумент (index), который является индексом сети на которую нужно сменить блок. <br /> P.S. не рекомендуется использовать на прямую
+                </div>
+                <h1 id="get_energy" class="class-name font">get_energy()</h1>
+                <div class="method-description font">
+                    Возвращяет текущее количество энергии в блоке
+                </div>
+                <h1 id="get_max_energy" class="class-name font">get_max_energy()</h1>
+                <div class="method-description font">
+                    Возвращяет максимальное количество энергии в блоке
+                </div>
+                <h1 id="set_energy" class="class-name font">set_energy()</h1>
+                <div class="method-description font">
+                    Задает количетсво энергии в блоке. <br />
+                    Принимает один агрумент (count), количество энергии.
+                </div>
+                <h1 id="is_energy_max" class="class-name font">is_energy_max()</h1>
+                <div class="method-description font">
+                    Возвращяет true если блок полностью заполнен энергие
+                </div>
+                <h1 id="count_max_energy" class="class-name font">count_max_energy()</h1>
+                <div class="method-description font">
+                    Принимает 1 агрумент (count). Возвращяет количество энергии, которое может вместить из агрумента.
+                </div>
+                <h1 id="receive_energy" class="class-name font">receive_energy()</h1>
+                <div class="method-description font">
+                    Вызывается когда блок получает энергию.
+                </div>
+                <h1 id="try_use_energy" class="class-name font">try_use_energy()</h1>
+                <div class="method-description font">
+                    Принимает 1 агрумент (count), количство энергии, которое попробует использовать. Вернет true если ему он сможет её потратить и потратит её.
+                </div>
+                <h1 id="give_energy" class="class-name font">give_energy()</h1>
+                <div class="method-description font">
+                    Отдаёт свою энергию другому блоку. Принимает 2 агрумента (energy_block, count), первый агрумент объект класса, второй агрумент количство энергии.
+                </div>
+                <h1 id="give_energy_neighbours" class="class-name font">give_energy_neighbours()</h1>
+                <div class="method-description font">
+                    Отдаёт свою энергию всем соседним блокам, которые могу её получить. Принимает 1 агрумент (count). Делит энергию равномерно между всеми доступными блоками.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

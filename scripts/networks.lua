@@ -122,7 +122,7 @@ local function countNetwork(x, y, z, visited, is_main)
 	end
 end
 
-function DetachFromNetwotk(x, y, z)
+function DetachFromNetwork(x, y, z)
     local pos_key = pos_to_key(x, y, z)
     local nbs = GetNeigbourEnergies(x, y, z)
     local block_network_index

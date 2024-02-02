@@ -246,7 +246,7 @@ function Energy_block:new(x, y, z, id, mod_id, meta, block_type, logic_function)
 
     -- вызывается когда блоку нужно отдать энергию всем соседним блокам
     ---@param count integer количество энергии для отдачи
-    function lBlock:give_energy_neighboues(count)
+    function lBlock:give_energy_neighbours(count)
         local nbs = GetNeigbourEnergies(self:get_position())
         local not_max_nbs = {}
         for _, nb in pairs(nbs) do
@@ -402,7 +402,7 @@ function RemoveBlock(x, y, z)
 end
 
 -- Получает все ближайшие блоки
-function GetBlockNeigbours(x, y, z)
+function GetBlockNeighbours(x, y, z)
 	local nb = {}
 	for _, dir in pairs(directions) do
 		local block = GetBlock(x + dir[1], y + dir[2], z + dir[3])
@@ -415,7 +415,7 @@ end
 
 -- Получает все ближайшие блоки с энергией
 function GetNeigbourEnergies(x, y, z)
-	local energies = GetBlockNeigbours(x, y, z)
+	local energies = GetBlockNeighbours(x, y, z)
 	for index, energy in pairs(energies) do
 		if energy:get_meta("is_energy") ~= "yes" then
 			energies:remove(index)
@@ -426,7 +426,7 @@ end
 
 -- Получает все ближайшие механизмы
 function GetNeigbourMachines(x, y, z)
-	local machines = GetBlockNeigbours(x, y, z)
+	local machines = GetBlockNeighbours(x, y, z)
 	for index, machine in pairs(machines) do
 		if machine:get_type() ~= BlockType.Machine then
 			machines:remove(index)
@@ -437,7 +437,7 @@ end
 
 -- Получает все ближайшие провода
 function GetNeigbourWires(x, y, z)
-	local wires = GetBlockNeigbours(x, y, z)
+	local wires = GetBlockNeighbours(x, y, z)
 	for index, wire in pairs(wires) do
 		if wire:get_type() ~= BlockType.Wire then
 			wires:remove(index)

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Класс Logger</title>
+    <link href="../../fonts.css" rel="stylesheet">
+    <link href="../../main.css" rel="stylesheet">
+    <link href="../docs.css" rel="stylesheet">
+</head>
+<body>
+<div class="main-container">
+    <header class="header">
+        <div class="header-container">
+            <a href="../../../index.html" class="font header-link logo">
+                Energizer
+            </a>
+            <a href="../docs.html" class="font header-link">
+                документация
+            </a>
+            <a href="../../creator/creator.html" class="font header-link creator">
+                создатель
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sub-container">
+            <div class="classes">
+                <div class="classes-text font">Классы</div>
+                <div class="class-container">
+                    <a class="class-link font" href="block.html">Block</a>
+                    <a class="class-link font" href="energy-block.html">EnergyBlock</a>
+                    <a class="class-link font" href="machine.html">Machine</a>
+                    <a class="class-link font" href="wire.html">Wire</a>
+                    <a class="class-link font" href="">Logger</a>
+                </div>
+                <div class="classes-text font">Разное</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../other/block-type.html">BlockType</a>
+                    <a class="class-link font" href="../other/machine-type.html">MachineType</a>
+                    <a class="class-link font" href="../other/global-methods.html">Глобальные методы</a>
+                </div>
+                <div class="classes-text font">Примеры</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../examples/block-create.html">Создание блока</a>
+                </div>
+            </div>
+            <div class="class-info">
+                <h1 class="class-name font"> Logger </h1>
+                <div class="class-description font">
+                    Является небольшим утилитарным классом для логирования.
+                </div>
+                <h1 class="class-name font"> Методы </h1>
+                <div class="class-methods font">
+                    <a class="method-link" href="#get_name">get_name()</a>,
+                    <a class="method-link" href="#log">log()</a>,
+                    <a class="method-link" href="#err">err()</a>,
+                    <a class="method-link" href="#warn">warn()</a>,
+                    <a class="method-link" href="#debug">debug()</a>,
+                    <a class="method-link" href="#table">table()</a>
+                </div>
+                <h1 id="get_name" class="class-name font">get_name()</h1>
+                <div class="method-description font">
+                    Возвращяет имя логгера в формате [name]
+                </div>
+                <h1 id="log" class="class-name font">log()</h1>
+                <div class="method-description font">
+                    Выводит сообщение в консоль
+                </div>
+                <h1 id="err" class="class-name font">err()</h1>
+                <div class="method-description font">
+                    Выводит ошибку в консоль. Сообщение с припиской <strong>error:</strong>
+                </div>
+                <h1 id="warn" class="class-name font">warn()</h1>
+                <div class="method-description font">
+                    Выводит предупреждение в консоль. Сообщение с припиской <strong>warn:</strong>
+                </div>
+                <h1 id="debug" class="class-name font">debug()</h1>
+                <div class="method-description font">
+                    Выводит сообщение отладки в консоль. Сообщение с припиской <strong>debug:</strong>.
+                    Работает только в случае, когда логгеру задан debug режим.
+                </div>
+                <h1 id="table" class="class-name font">table()</h1>
+                <div class="method-description font">
+                    Выводит таблицу в консоль. Работает только в случае, когда логгеру задан debug режим.
+                </div>
+                <h1 class="class-name font"> Как создать logger </h1>
+                <div class="method-description font">
+                    Для создания логгера вам необходимо прописать следующее: <br />
+                    Logger = Logger:new("mod_id", is_debug) <br />
+                    Это создаст Logger с вашим mod_id, вторым агрумент нужно указать, работает ли ваш логгер с отладкой (true/false).
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.text-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.text-link:hover {
+    text-decoration: none;
+    color: var(--link-hover);
+}
+
+.author {
+    text-align: center;
+}

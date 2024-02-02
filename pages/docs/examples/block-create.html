@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Класс Logger</title>
+    <link href="../../fonts.css" rel="stylesheet">
+    <link href="../../main.css" rel="stylesheet">
+    <link href="../docs.css" rel="stylesheet">
+</head>
+<body>
+<div class="main-container">
+    <header class="header">
+        <div class="header-container">
+            <a href="../../../index.html" class="font header-link logo">
+                Energizer
+            </a>
+            <a href="../docs.html" class="font header-link">
+                документация
+            </a>
+            <a href="../../creator/creator.html" class="font header-link creator">
+                создатель
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sub-container">
+            <div class="classes">
+                <div class="classes-text font">Классы</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../classes/block.html">Block</a>
+                    <a class="class-link font" href="../classes/energy-block.html">EnergyBlock</a>
+                    <a class="class-link font" href="../classes/machine.html">Machine</a>
+                    <a class="class-link font" href="../classes/wire.html">Wire</a>
+                    <a class="class-link font" href="../classes/logger.html">Logger</a>
+                </div>
+                <div class="classes-text font">Разное</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../other/block-type.html">BlockType</a>
+                    <a class="class-link font" href="../other/machine-type.html">MachineType</a>
+                    <a class="class-link font" href="../other/global-methods.html">Глобальные методы</a>
+                </div>
+                <div class="classes-text font">Примеры</div>
+                <div class="class-container">
+                    <a class="class-link font" href="">Создание блока</a>
+                </div>
+            </div>
+            <div class="class-info">
+                <h1 class="class-name font"> Создание блока </h1>
+                <div class="class-description font">
+                    Показывает примеры правильного создания блоков и описывает их.
+                </div>
+                <h1 class="class-name font"> Блоки </h1>
+                <div class="class-methods font">
+                    <a class="method-link" href="#Block">Block</a>,
+                    <a class="method-link" href="#Machine">Machine</a>,
+                    <a class="method-link" href="#Wire">Wire</a>
+                </div>
+                <h1 id="Block" class="class-name font">Block</h1>
+                <div class="method-description font">
+                    Для создание блока вам необходимо просать в его скрипте: <br />
+                    <code>
+                        -- Данная функция вызывается при установки блока <br />
+                        function on_placed(x, y, z) <br />
+                            CreateBlock(x, y, z, "block_id", "mod_id", {}) <br />
+                        end <br />
+                        -- Данная функция вызывается при установки блока <br />
+                        function on_broken(x, y, z) <br />
+                            RemoveBlock(x, y, z) <br />
+                        end <br />
+                    </code>
+                    Если вы хотите создать функцию для блока, вам необходимо вызвать функцию CreateBlockFunc() из world.lua скрипта: <br />
+                    <code>
+                        CreateBlockFunc("machine", function (machine) <br />
+                            print("tick!") <br />
+                        end)
+                    </code>
+                </div>
+                <h1 id="Machine" class="class-name font">Machine</h1>
+                <div class="method-description font">
+                    Для создание механизма вам необходимо просать в его скрипте: <br />
+                    <code>
+                        -- Данная функция вызывается при установки блока <br />
+                        function on_placed(x, y, z) <br />
+                            CreateBlock(x, y, z, "block_id", "mod_id", {}) <br />
+                            AttachToNetwork(x, y, z) <br />
+                        end <br />
+                        -- Данная функция вызывается при установки блока <br />
+                        function on_broken(x, y, z) <br />
+                            DetachFromNetwork(x, y, z) <br />
+                            RemoveBlock(x, y, z) <br />
+                        end <br />
+                    </code>
+
+                </div>
+                <h1 id="Wire" class="class-name font">Wire</h1>
+                <div class="method-description font">
+                    Для создание провода вам необходимо просать в его скрипте код аналогичный Machine <br />
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

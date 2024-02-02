@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Глобальные методы</title>
+    <link href="../../fonts.css" rel="stylesheet">
+    <link href="../../main.css" rel="stylesheet">
+    <link href="../docs.css" rel="stylesheet">
+</head>
+<body>
+<div class="main-container">
+    <header class="header">
+        <div class="header-container">
+            <a href="../../../index.html" class="font header-link logo">
+                Energizer
+            </a>
+            <a href="../docs.html" class="font header-link">
+                документация
+            </a>
+            <a href="../../creator/creator.html" class="font header-link creator">
+                создатель
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <div class="sub-container">
+            <div class="classes">
+                <div class="classes-text font">Классы</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../classes/block.html">Block</a>
+                    <a class="class-link font" href="../classes/energy-block.html">EnergyBlock</a>
+                    <a class="class-link font" href="../classes/machine.html">Machine</a>
+                    <a class="class-link font" href="../classes/wire.html">Wire</a>
+                    <a class="class-link font" href="../classes/logger.html">Logger</a>
+                </div>
+                <div class="classes-text font">Разное</div>
+                <div class="class-container">
+                    <a class="class-link font" href="block-type.html">BlockType</a>
+                    <a class="class-link font" href="machine-type.html">MachineType</a>
+                    <a class="class-link font" href="">Глобальные методы</a>
+                </div>
+                <div class="classes-text font">Примеры</div>
+                <div class="class-container">
+                    <a class="class-link font" href="../examples/block-create.html">Создание блока</a>
+                </div>
+            </div>
+            <div class="class-info">
+                <h1 class="class-name font"> Глобальные методы </h1>
+                <div class="class-description font">
+                    Набо методов которые вам пригодятся для работы с Energizer.
+                </div>
+                <h1 class="class-name font"> Методы </h1>
+                <div class="class-methods font">
+                    <a class="method-link" href="#CreateBlock">CreateBlock()</a>,
+                    <a class="method-link" href="#CreateMachine">CreateMachine()</a>,
+                    <a class="method-link" href="#CreateWire">CreateWire()</a>,
+                    <a class="method-link" href="#GetBlock">GetBlock()</a>,
+                    <a class="method-link" href="#RemoveBlock">RemoveBlock()</a>,
+                    <a class="method-link" href="#GetBlockNeighbours">GetBlockNeighbours()</a>,
+                    <a class="method-link" href="#AttachToNetwork">AttachToNetwork()</a>,
+                    <a class="method-link" href="#DetachFromNetwork">DetachFromNetwork()</a>,
+                    <a class="method-link" href="#GetMachinesIn">GetMachinesIn()</a>,
+                    <a class="method-link" href="#GetRecipientsIn">GetRecipientsIn()</a>,
+                    <a class="method-link" href="#CreateBlockType">CreateBlockType()</a>,
+                    <a class="method-link" href="#CreateBlockFunc">CreateBlockFunc()</a>
+                </div>
+                <h1 id="CreateBlock" class="class-name font">CreateBlock()</h1>
+                <div class="method-description font">
+                    Создает объект класса Block и возвращяет его. Принимает 6 агрументов (x, y, z, id, mod_id, meta). <br />
+                    x, y, z - позиция блока. <br />
+                    id - ид блока. <br />
+                    mod_id - ид мода <br />
+                    meta - таблица с данными <br />
+                    Пример: <a class="example-link" href="../examples/block-create.html#Block">Block</a>
+                </div>
+                <h1 id="CreateMachine" class="class-name font">CreateMachine()</h1>
+                <div class="method-description font">
+                    Создает объект класса Machine и возвращяет его. Принимает 6 агрументов (x, y, z, id, mod_id, meta). <br />
+                    x, y, z - позиция блока. <br />
+                    id - ид блока. <br />
+                    mod_id - ид мода <br />
+                    meta - таблица с данными <br />
+                    Пример: <a class="example-link" href="../examples/block-create.html#Machine">Machine</a>
+                </div>
+                <h1 id="CreateWire" class="class-name font">CreateWire()</h1>
+                <div class="method-description font">
+                    Создает объект класса Wire и возвращяет его. Принимает 6 агрументов (x, y, z, id, mod_id, meta). <br />
+                    x, y, z - позиция блока. <br />
+                    id - ид блока. <br />
+                    mod_id - ид мода <br />
+                    meta - таблица с данными <br />
+                    Пример: <a class="example-link" href="../examples/block-create.html#Wire">Wire</a>
+                </div>
+                <h1 id="GetBlock" class="class-name font">GetBlock()</h1>
+                <div class="method-description font">
+                    Вовращяет объект класса на текущий позиции, принимает 3 агрумента (x, y, z)
+                </div>
+                <h1 id="RemoveBlock" class="class-name font">RemoveBlock()</h1>
+                <div class="method-description font">
+                    Удаляет объект класса на текущий позиции, принимает 3 агрумента (x, y, z)
+                </div>
+                <h1 id="GetBlockNeighbours" class="class-name font">GetBlockNeighbours()</h1>
+                <div class="method-description font">
+                    Получает все соседнии объекты классов
+                </div>
+                <h1 id="AttachToNetwork" class="class-name font">AttachToNetwork()</h1>
+                <div class="method-description font">
+                    Добавляет блок в сеть
+                </div>
+                <h1 id="DetachFromNetwork" class="class-name font">DetachFromNetwork()</h1>
+                <div class="method-description font">
+                    Удаляет блок их сети
+                </div>
+                <h1 id="GetMachinesIn" class="class-name font">GetMachinesIn()</h1>
+                <div class="method-description font">
+                    Получает все машины в сети
+                </div>
+                <h1 id="GetRecipientsIn" class="class-name font">GetRecipientsIn()</h1>
+                <div class="method-description font">
+                    Получает все машины типа получатель в сети
+                </div>
+                <h1 id="CreateBlockType" class="class-name font">CreateBlockType()</h1>
+                <div class="method-description font">
+                    Создает новый тип блока, принимает 3 агрумента (type, value, func). Первый агрумент это тип блока, например Machine.
+                    Строковое значение типа блока, например machine. Функция загрузки блока их файла, например: <br />
+                    function (x, y, z, id, mod_id, meta) <br />
+                    CreateMachine(x, y, z, id, mod_id, meta) <br />
+                    end <br />
+                </div>
+                <h1 id="CreateBlockFunc" class="class-name font">CreateBlockFunc()</h1>
+                <div class="method-description font">
+                    Создает функцию для блока, принимает 2 агрумента (block_id, func). <br />
+                    block_id - ид блока для которого будет создана функция. <br />
+                    func - функция принимающая 1 агрумент (block) <br />
+                    block - объект класса <br />
+                    Например: <br />
+                    function (machine) <br />
+                    print("tick!") <br />
+                    end <br />
+                    Пример: <a class="example-link" href="../examples/block-create.html#Block">Block</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

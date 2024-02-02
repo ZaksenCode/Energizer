@@ -1,0 +1,97 @@
+.classes-text {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.class-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.class-methods > a {
+    color: inherit;
+}
+
+.class-methods > a:link {
+    color: inherit;
+}
+
+.class-methods > a:hover {
+    color: var(--link-hover);
+}
+
+.example-link,.example-link:link {
+    color: inherit;
+}
+
+.example-link:hover {
+    color: var(--link-hover);
+}
+
+.class-link {
+    color: var(--font);
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.class-link:hover {
+    color: var(--link-hover);
+}
+
+.extends-link:hover {
+    color: var(--link-hover);
+}
+
+.sub-container {
+    padding: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.classes {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary);
+    padding: 10px;
+    max-width: 280px;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.class-info {
+    padding: 20px;
+    border-radius: 20px;
+    background-color: var(--secondary);
+    flex-grow: 1;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+}
+
+.class-name {
+    font-size: 36px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.class-description {
+    font-size: 28px;
+    font-weight: 400;
+}
+
+.class-methods {
+    font-size: 28px;
+    font-weight: 400;
+}
+
+.method-description {
+    font-size: 28px;
+    font-weight: 400;
+}

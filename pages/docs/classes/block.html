@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <title>Класс Block</title>
+    <link href="../../fonts.css" rel="stylesheet">
+    <link href="../../main.css" rel="stylesheet">
+    <link href="../docs.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="main-container">
+      <header class="header">
+        <div class="header-container">
+          <a href="../../../index.html" class="font header-link logo">
+            Energizer
+          </a>
+          <a href="../docs.html" class="font header-link">
+            документация
+          </a>
+          <a href="../../creator/creator.html" class="font header-link creator">
+            создатель
+          </a>
+        </div>
+      </header>
+      <div class="container">
+        <div class="sub-container">
+          <div class="classes">
+            <div class="classes-text font">Классы</div>
+            <div class="class-container">
+              <a class="class-link font" href="">Block</a>
+              <a class="class-link font" href="energy-block.html">EnergyBlock</a>
+              <a class="class-link font" href="machine.html">Machine</a>
+              <a class="class-link font" href="wire.html">Wire</a>
+              <a class="class-link font" href="logger.html">Logger</a>
+            </div>
+            <div class="classes-text font">Разное</div>
+            <div class="class-container">
+              <a class="class-link font" href="../other/block-type.html">BlockType</a>
+              <a class="class-link font" href="../other/machine-type.html">MachineType</a>
+              <a class="class-link font" href="../other/global-methods.html">Глобальные методы</a>
+            </div>
+            <div class="classes-text font">Примеры</div>
+            <div class="class-container">
+              <a class="class-link font" href="../examples/block-create.html">Создание блока</a>
+            </div>
+          </div>
+          <div class="class-info">
+            <h1 class="class-name font"> Block </h1>
+            <div class="class-description font">
+              Является главным классом, который содержит основую логику работы блоков. <br />
+              Наследуется:
+              <a class="extends-link" href="energy-block.html">EnergyBlock</a>
+            </div>
+            <h1 class="class-name font"> Методы </h1>
+            <div class="class-methods font">
+              <a class="method-link" href="#get_meta">get_meta()</a>,
+              <a class="method-link" href="#get_all_meta">get_all_meta()</a>,
+              <a class="method-link" href="#set_meta">set_meta()</a>,
+              <a class="method-link" href="#remove_meta">remove_meta()</a>,
+              <a class="method-link" href="#get_position">get_position()</a>,
+              <a class="method-link" href="#get_id">get_id()</a>,
+              <a class="method-link" href="#get_type">get_type()</a>,
+              <a class="method-link" href="#is_missing">is_missing()</a>,
+              <a class="method-link" href="#tick">tick()</a>,
+              <a class="method-link" href="#run_logic">run_logic()</a>,
+              <a class="method-link" href="#get_logic">get_logic()</a>
+            </div>
+            <h1 id="get_meta" class="class-name font">get_meta()</h1>
+            <div class="method-description font">
+              Данный метод принимает 1 агрумент (key), который является ключем для значения.
+              Возвращяет хранимые данные по данному ключу.
+            </div>
+            <h1 id="get_all_meta" class="class-name font">get_all_meta()</h1>
+            <div class="method-description font">
+              Данный метод возвращяет таблицу со всеми элементами меты в блоке.
+            </div>
+            <h1 id="set_meta" class="class-name font">set_meta()</h1>
+            <div class="method-description font">
+              Данный метод принимает 2 агрумента (key, value), где 1 агрумент это ключ, а второй агрумент значение.
+              Создает или изменяет уже существующие данные(мету) у блока по ключу.
+            </div>
+            <h1 id="remove_meta" class="class-name font">remove_meta()</h1>
+            <div class="method-description font">
+              Данный метод принимает 1 агрумент (key), который является ключем для значения.
+              Удаляет хранимые данные по данному ключу.
+            </div>
+            <h1 id="get_position" class="class-name font">get_position()</h1>
+            <div class="method-description font">
+              Данный метод возвраящет позицию блока (3 значения подряд).
+            </div>
+            <h1 id="get_id" class="class-name font">get_id()</h1>
+            <div class="method-description font">
+              Возвращяет id блока в формате mod_id:block_id
+            </div>
+            <h1 id="get_type" class="class-name font">get_type()</h1>
+            <div class="method-description font">
+              Возвращяет тип блока. Тип блока является строкой из Enum <a class="class-link font" href="../other/block-type.html">BlockType</a>
+            </div>
+            <h1 id="is_missing" class="class-name font">is_missing()</h1>
+            <div class="method-description font">
+              Возвращяет true, если блок не прогружен (находится за дистанцией прорисовки)
+            </div>
+            <h1 id="tick" class="class-name font">tick()</h1>
+            <div class="method-description font">
+              Данный метод вызывается автоматический каждый тик, так же вызывает run_logic()
+            </div>
+            <h1 id="run_logic" class="class-name font">run_logic()</h1>
+            <div class="method-description font">
+              Вызывается автоматический каждый тик если есть функция. Задать функцию можно с помощью метода <a class="class-link font" href="">CreateBlockFunc()</a>
+            </div>
+            <h1 id="get_logic" class="class-name font">get_logic()</h1>
+            <div class="method-description font">
+              Возвращяет функцию данного блока
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
